@@ -1,0 +1,283 @@
+---
+title: "Introduction to sparsenetgls"
+author: "Irene SL Zeng and Thomas Lumley"
+package: sparsenetgls
+output: 
+    BiocStyle::html_document:
+    toc: true
+
+vignette: >
+    %\VignetteIndexEntry{Introduction to sparsenetgls}
+    %\VignetteEngine{knitr::rmarkdown}
+    %\VignetteEncoding{UTF-8}  
+---
+
+```{r setup, include=TRUE}
+library(knitr)
+library(rmarkdown)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+## Summary  
+In regression models for Gaussian multivariate data from high-throughput assays
+("omic" data), the response variables normally have their latent structure in 
+the variance-covariance matrix and its inverse. The conventional approach gives
+assumptions of these structures in regression. For example, in repeated measure
+analysis of variance, the covariance matrix is given a fixed form of the 
+structure. However, these assumptions are not known to be true unless there are
+prior information available. Accurate information of the variance covariance 
+matrix and the precision matrix will achieve better estimation in the regression
+coefficients. In cases of response variables with only a small numbers of 
+non-zero covariance terms in the variance-covariance matrix, they are equivalent
+to a sparse undirected network graph of which nodes represent variables and 
+edges represent non-zero links between these variables.
+
+Our method is to utilize the Gaussian Graphical Model (GGM) in estimating the 
+structure of a sparse variance-covariance matrix and its inverse (precision 
+matrix), in order to improve the estimation of the multivariate generalized 
+least square regression.   
+
+The method firstly uses lasso penalization method "glasso", neighbour 
+selection method or "enet" method to estimate the precision matrix of 
+these response variables; and Secondly selects the covariance terms from the 
+sample variance-covariance matrix based on an estimated graph structure of the 
+precision matrix and a fine-tuning parameter. The fine tuning parameter is 
+selected according to the primitive graph theory which bases on power of the 
+adjacent matrix to infer the final structure of the variance-covariance matrix.
+
+
+## The model 
+The sparsenetgls is a multivariate regression model given an estimated 
+precision matrix and variance-covariance matrix from the response variables. 
+It uses the sandwich estimator of the variance-covariance matrix of the 
+regression coefficients. 
+In the estimation for the precision matrix, there are four options provided in 
+the package sparsenetgls and they are "glasso", "lasso", "mb", and "elastic". 
+"glasso" used the graphical lasso method proposed by Yuan and Lin (2007), 
+and the block-wise coordinate descend algorithm by Friedman, Hastie, Hofling 
+and Tibshirani (2007).  
+"lasso" and "mb" use the linear regression with lasso penalization to provide 
+an asymmetric approximation which is proposed by  Meinshausen and 
+Buhlmann (2006). 
+"enet" is also an asymmetric approximation by linear regressions but using the 
+combination of lasso penalization (l1) and ridge regularization(l2).   
+In the generalized least square regression, regression coefficients were 
+estimated from the multilevel formatted multivariate model. Response variables 
+are stacked into one univariate regression variable with an indicator to 
+identify their sampling units. The sandwich estimator of the variance is 
+calculated based on the given precision, and variance-covariance matrix.    
+There are different options for the selection of the regression coefficients 
+from the penalized path. One is to base on the minimal variance, the other 
+options are the information critiria (AIC and BIC).  The variances of the 
+selected regression coefficients are calculated from its sandwich estimator 
+given the selected structure of the precision matrix and the selected 
+covariance terms based on the fine-tuning parameter.  
+
+
+# The sparsenetgls R package 
+
+The main functions included in the package "sparsenetgls" are:
+    
+1. path_result_for_roc(): the path_result_for_roc function is designed to 
+produce the diagnosis index for the prediction accuracy of a Gaussian Graphical
+model (GGM) when comparing it to the true graph structure.  The GGM must use a
+L-p norm regularizations (p=1,2) with the series of solutions conditional on 
+theregularization parameter.  The returning list of assessment results for a 
+series of precision matrices includes sensitiviy/specificity/Nagative 
+predicitedvalue /Positive predicted value. 
+    
+2. plot_roc(): it is designed to produce the Receiver Operative 
+Characteristics (ROC) Curve to visualize the prediction accuracy of a Gaussian 
+Graphical model (GGM) to the true graph structure. The GGM must use a L-p norm 
+regularizations (p=1,2) with the series of solutions conditional on the 
+regularization parameter.
+    
+    
+3. sparsenetgls(): it is designed for multivariate regression given a 
+penalized and/or regularised precision and covariance Matrix of the 
+multivariate Gaussian distributed responses. Generalized least squared 
+regression is used to derive the sandwich variances-covariance matrix for the 
+regression coefficients of the explanatory variables, conditional on the 
+solutions of the precision and covariance matrix.
+    
+    
+4. plotsngls(): It is designed to provide the line plots of penalized 
+parameter lambda and variance of regression coefficients in gls regression. It 
+also provides the graph structures of the solutions to the precision matrix in 
+the penalized path.
+
+
+# Installation
+
+There are two options for the installation: 
+
+## Use bioconductor as installation source
+```{r installation1,eval=FALSE}
+source("https://bioconductor.org/biocLite.R")
+BiocInstaller::biocLite("sparsenetgls")
+library(sparsenetgls)
+```
+
+## Use github as installation source
+```{r installation2,eval=FALSE}
+devtools::install_github("superOmics/sparsenetgls")
+library(sparsenetgls)
+```
+
+# Instructions and Examples of using the main functions
+
+The following section provides examples using a known precision matrix 
+stored in R datafile: bandprec.rdata.
+The examples include:
+    
+1) To assess the results from Gaussian graphical model given by sparsenetgls;
+
+2) Use sparsenetgls to estimate the regression coefficients from a multivariate
+regression and use the minimal variance , information criteria to select the 
+regression coefficients;
+    
+3) Visualize the results from sparsenetgls;
+
+4) Use different options: "lasso", "mb", and "elastic" for the GGM in gls. 
+
+Example 1 includes codes for assessing the results of a GGM from the 
+sparsenetgls function. 
+The first 12 lines is to simulate a dataset of response variables given the 
+known precision matrix and a set of explanatory variables. The returning list 
+of the sparsenetgls function includes the series of precision matrix produced 
+from one of the GGM option (specified by method).
+In plot_roc , both of the ngroup and group option indicate if the assessed 
+results are for a group of GGM or for only one series of GGM. 
+
+```{r example 1: assess estimated result from a GGM, eval=TRUE}
+library(sparsenetgls)
+library(MASS)
+library(Matrix)
+#simulate the dataset
+data(bandprec, package="sparsenetgls")
+varKnown <- solve(as.matrix(bandprec))
+prec <- as.matrix(bandprec)
+    
+Y0 <- mvrnorm(n=100, mu=rep(0,50), Sigma=varKnown)
+nlambda=10                                     
+#u-beta
+u <- rep(1,8)
+X_1 <- mvrnorm(n=100, mu=rep(0,8), Sigma=Diagonal(8,rep(1,8)))
+Y_1 <- Y0+as.vector(X_1%*%as.matrix(u))
+databand_X=X_1
+databand_Y=Y_1
+
+#produce the precision matrices
+omega <- sparsenetgls(responsedata=databand_Y, predictdata=databand_X, 
+nlambda=10, ndist=1, method="glasso")$PREC_seq
+omega_est <- array(dim=c(50,50,10))
+for (i in seq_len(10)) omega_est[,,i] <- as.matrix(omega[[i]])
+
+roc_path_result <- path_result_for_roc(PREC_for_graph=prec, OMEGA_path=omega_est
+, pathnumber=10)
+plot_roc(result_assessment=roc_path_result, group=FALSE, ngroup=0,
+est_names="glasso estimation")
+```
+
+Example 2 provides codes for deriving the regression coefficients from 
+sparsenetgls using "glasso" method to estimate the precision matrix of GGM. 
+The function convertbeta() is to convert the regression coefficients from the 
+standardized scale to the original scale. 
+The following codes after the convertion is to select betas with the minimal 
+variance, aic and bic. 
+
+```{r example 2: Use the sparsenetgls and convertbeta function,eval=TRUE}
+
+fitgls <- sparsenetgls(databand_Y, databand_X, nlambda=10, 
+ndist=5, method="glasso")
+
+#Convert the regression coefficients to its original scale
+q <- dim(databand_X)[2]
+nlambda=10
+
+betagls <- matrix(nrow=nlambda, ncol=q+1)
+for (i in seq_len(nlambda))   
+betagls[i,] <- convertbeta(Y=databand_Y, X=databand_X, q=q+1,
+beta0=fitgls$beta[,i])$betaconv
+
+#Beta selection 
+
+#select lamda and dist value based on the minimal variance of beta
+ndist <- max(fitgls$power)-1
+tr_gamma <- matrix(nrow=10, ncol=ndist-1)
+
+for (j in seq_len(ndist-1))
+    for (i in seq_len(nlambda)) 
+        tr_gamma[i,j] <- (sum(diag(fitgls$covBeta[,,j,i]))) 
+
+select.lambda.dist <- which(tr_gamma==min(tr_gamma), arr.ind=TRUE)
+select.lambda.dist
+betagls_select <- betagls[select.lambda.dist[1],]
+
+#row is lambda and column is dist
+varbeta <- diag(fitgls$covBeta[,,ndist,select.lambda.dist[1]])
+
+##select lamda and dist value based on the AIC and BIC
+select.lambda.dist2 <- which(fitgls$bic==min(fitgls$bic,na.rm=TRUE),
+arr.ind=TRUE)
+select.lambda.dist3 <- which(fitgls$aic==min(fitgls$aic,na.rm=TRUE),
+arr.ind=TRUE)
+varbeta_bic <- diag(fitgls$covBeta[,,ndist,select.lambda.dist2[1]])
+varbeta_aic <- diag(fitgls$covBeta[,,ndist,select.lambda.dist3[1]])
+
+```
+
+Example 3 is to visualize the results by line-plots and structure-plots for 
+the derived precision matrix from the sparsenet object. 
+
+```{r example 3, Get the visualized result, eval=TRUE}
+plotsngls(fitgls,ith_lambda=5)
+```
+
+Example 4 provides examples for using different options in estimating GGM in 
+sparsenetgls.
+
+```{r example 4, Use different options of GGM estimation, eval=TRUE}
+#Use the glasso method to estimate the precision matrix
+fitgls_g <- sparsenetgls(databand_Y, databand_X, nlambda=10, ndist=5,
+method="elastic")
+
+#Uset the lasso method to approximate the precision matrix
+#fitgls_l <- sparsenetgls(databand_Y, databand_X, nlambda=10, ndist=5,
+#method="lasso")
+
+#use the Meinshausen B?hlmann method to approximate the precision matrix
+#fitgls_m <- sparsenetgls(databand_Y, databand_X, nlambda=10, ndist=5,
+#method="mb")
+```
+
+# sessionInfo
+All of the outputs in this vignette are produced under the following 
+conditions:
+
+```{r sessionInfo,echo=TRUE,eval=TRUE}
+sessionInfo()
+```
+
+# References
+1. Dempster, A.P. Covariance Selection. Biomatrics 1972;28(1):157-175.
+2. Edwards, D. Introduction to Graphical Modelling. New York: Springer; 2000.
+3. Friedman, J., Hastie, T., Simon, N. and Tibshiran, R. Regularization Paths 
+for Generalized Linear Models via Coordinate Descent. Journal OF Statistical 
+Software 2010;33(1).
+4. Friedman, J., Hastie, T., Simon, N. and Tibshirani, R. 2016. Lasso and 
+Elastic-Net Regularized Generalized Linear Models
+5. Friedman, J., Hastie, T. and Tibshirani, R. Applications of the lasso and 
+grouped lasso to the estimation of sparse graphical models. In. US; 2010.
+6. Meinshausen, N. and Buhlmann, P. High-dimensional graphs and variable 
+selection with the lasso. The annals of statistics 2006;34(3):1436-1462.
+7. Pourahmadi, M. Covariance Estimation : The GLM and Regularization 
+perspectives. Statistical Science 2011;26(3):369-387.
+8. Yuan, M. and Lin, Y. Model Selection and Estimation in the Gaussian 
+Graphical Model. Biometrika 2007;94(1.):19-35.
+9. Zhao, T. and Liu, H. The huge Package for High-dimensional Undirected Graph
+estimation in R. Journal of Machine Learning Research 2012;13: 1059-1062.
+10. Zou, H. and Hastie, T. Regularization and variable selection via the 
+Elastic net. Journal of the Royal Statistical Society 2005;2:301-320.

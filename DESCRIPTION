@@ -1,0 +1,34 @@
+Package: sparsenetgls
+Type: Package
+Title: Using Gaussian graphical structue learning estimation in generalized least squared regression for multivariate normal regression 
+Version: 0.99.1
+Authors@R: c(person("Irene", "Zeng", role = c("aut", "cre"),
+            email = "i.zeng@auckland.ac.nz"),
+            person("Thomas", "Lumley", role = "ctb", email = "t.lumey@auckland.ac.nz"))
+Maintainer: Irene Zeng <i.zeng@auckland.ac.nz>
+Description: The package provides methods of combining the graph structure learning and generalized 
+    least square regression to improve the regression estimation. The main function sparsenetgls() provides
+	solutions for multivariate regression with Gaussian distributed dependant variables and explanatory variables
+    utlizing multiple well-known graph structure learning approaches to estimating the precision matrix, and uses
+	a penalized variance covariance matrix with a distance tuning parameter of the graph structure in deriving the
+    sandwich estimators in generalized least square (gls) regression. This package also provides functions for 
+    assessing a Gaussian graphical model which uses the	penalized approach. It uses Receiver Operative Characteristics
+    curve as a visualization tool in the assessment.  
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Depends: R (>= 3.5.0), Matrix, MASS  
+Imports: methods, glmnet, parcor, huge, grDevices, graphics, stats, utils 
+Suggests: testthat,
+    lme4,
+    BiocStyle, 
+    knitr,
+    rmarkdown,
+    roxygen2  (>= 5.0.0)
+NeedsCompilation: no
+URL: 
+RoxygenNote: 6.0.1
+biocViews: GraphAndNetwork,Regression,Metabolomics,CopyNumberVariation,MassSpectrometry,Proteomics,Software,Visualization
+bugReport: https://github.com/superOmics/sparsenetgls/issues
+VignetteBuilder: knitr
+SystemRequirements: GNU make
