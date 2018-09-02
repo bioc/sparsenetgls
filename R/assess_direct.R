@@ -1,4 +1,5 @@
-#'The assess_direct() function is designed to 
+#'The assess_direct() function
+#'@description  The assess_direct function is designed to 
 #'produce the prediction accuracy of a Gaussian Graphical model(GGM) 
 #'to the true graph structure with a known precision matrix.
 #'
@@ -24,43 +25,30 @@
 #'@export
 
 
-assess_direct <- function(PREC_for_graph,OMEGA_for_graph,p)
-
-{
-    truepos=trueneg=0
-    testpos=testneg=0
-    corrpos=corrneg=0
+assess_direct <- function(PREC_for_graph, OMEGA_for_graph, p) {
+    truepos = trueneg = 0
+    testpos = testneg = 0
+    corrpos = corrneg = 0
     
-    for ( i in seq_len(p))
-        for ( j in i:p)  {if ((i!=j) & (PREC_for_graph[i,j]!=0))
-                            truepos=truepos+1}
+    PREC_vals <- PREC_for_graph[upper.tri(PREC_for_graph)]
+    OMEGA_vals <- OMEGA_for_graph[upper.tri(OMEGA_for_graph)]
     
-    for ( i in seq_len(p))
-        for ( j in i:p)  {if ((i!=j) & abs(OMEGA_for_graph[i,j])>0)
-                            testpos=testpos+1}
-    
-    for ( i in seq_len(p))
-        for ( j in i:p)  {if ((i!=j) & (PREC_for_graph[i,j]!=0) &
-                                (OMEGA_for_graph[i,j]!=0)) corrpos=corrpos+1}
-    
-    #Counting the true negatives
-    for ( i in seq_len(p))
-        for ( j in i:p)  {if ((i!=j) & (PREC_for_graph[i,j]==0))
-                            trueneg=trueneg+1}
-    for ( i in seq_len(p))
-        for ( j in i:p)  {if ((i!=j) & (OMEGA_for_graph[i,j]==0))
-                            testneg=testneg+1}
-    
-    for ( i in seq_len(p))
-        for ( j in i:p)  {if ((i!=j) & (PREC_for_graph[i,j]==0)
-                            & (OMEGA_for_graph[i,j]==0))
-                            corrneg=corrneg+1}
+    ## add up TRUE's of various conditionals
+    truepos <- sum(PREC_vals != 0)
+    testpos <- sum(abs(OMEGA_vals) > 0)
+    corrpos <- sum((PREC_vals != 0) & (abs(OMEGA_vals) != 
+        0))
+    trueneg <- sum((PREC_vals == 0))
+    testneg <- sum((OMEGA_vals == 0))
+    corrneg <- sum((PREC_vals == 0) & (OMEGA_vals == 
+        0))
     
     sensitivity = corrpos/truepos
     specificity = corrneg/trueneg
     NPV = corrneg/testneg
     PPV = corrpos/testpos
     
-    return(list(truepos=truepos*2,trueneg=trueneg*2,sensitivity=sensitivity,
-                specificity=specificity,NPV=NPV,PPV=PPV))
+    return(list(truepos = truepos * 2, trueneg = trueneg * 
+        2, sensitivity = sensitivity, specificity = specificity, 
+        NPV = NPV, PPV = PPV))
 }

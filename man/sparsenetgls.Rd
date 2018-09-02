@@ -2,19 +2,10 @@
 % Please edit documentation in R/sparsenetgls.R
 \name{sparsenetgls}
 \alias{sparsenetgls}
-\title{The sparsenetgls() function is a combination of the graph structure
-learning and generalized least square regression.
-It is designed for multivariate regression uses penalized and/or regularised
-approach to deriving the precision and covariance Matrix of the multivariate
-Gaussian distributed responses. Gaussian Graphical model is used to learn the
-structure of the graph and construct the precision and covariance matrix.
-Generalized least squared regression is used to derive the sandwich
-estimation of variances-covariance matrix for the regression coefficients
-of the explanatory variables, conditional on the solutions of the precision
-and covariance matrix.}
+\title{The sparsenetgls() function}
 \usage{
 sparsenetgls(responsedata, predictdata, nlambda = 10, ndist = 5,
-method = "lasso", lambda.min.ratio = 1e-05)
+method = c("lasso", "glasso", "elastic", "mb"), lambda.min.ratio = 1e-05)
 }
 \arguments{
 \item{responsedata}{It is a data matrix of multivariate normal distributed
@@ -35,27 +26,27 @@ The default value is 5.}
 \item{method}{It is the option parameter for selecting the penalized method
 to derive the precision matrix in the calculation of the sandwich estimator
 of regression coefficients and their variance-covariance
-matrix. The options are "glasso", "lasso","elastic", and "mb". "glasso" use
+matrix. The options are 'glasso', 'lasso','elastic', and 'mb'. 'glasso' use
 the graphical lasso method documented in Yuan and lin (2007) and Friedman,
 Hastie et al (2007). It used the imported function from
-R package "huge". "lasso" use the penalized liner regression among the
+R package 'huge'. 'lasso' use the penalized liner regression among the
 response variables (Y[,j]~Y[,1]+...Y[,j-1],Y[,j+1] +...Y[,p]) to estimate
-the precision matrix.  "elastic" uses the enet-regularized linear
+the precision matrix.  'elastic' uses the enet-regularized linear
 regression among the response variables to estimate the precision matrix.
 Both of these methods utilize the coordinate descending algorithm documentd
 in Friedman, J., Hastie, T. and Tibshirani, R. (2008) and use the
-imported function from R package "glmnet".  "mb" use the Meinshausen and
-Bühlmann penalized linear regression and the neighbourhood selection with
+imported function from R package 'glmnet'.  'mb' use the Meinshausen and
+Buhlmann penalized linear regression and the neighbourhood selection with
 the lasso approach (2006) to select the covariance terms and derive the
-corresponding precision matrix ; It uses the imported function from "huge"
+corresponding precision matrix ; It uses the imported function from 'huge'
 in function sparsenetgls().}
 
 \item{lambda.min.ratio}{It is the default parameter set in function huge()
-in the package "huge". Quoted from huge(),
+in the package 'huge'. Quoted from huge(),
 it is the minial value of lambda, being a fraction of the uppperbound (MAX)
 of the regularization/thresholding parameter
 that makes all the estimates equal to 0. The default value is 0.001.
-It is only applicable when "glasso" and "mb" method is used.}
+It is only applicable when 'glasso' and 'mb' method is used.}
 }
 \value{
 Return the list of regression results including the regression
@@ -65,7 +56,7 @@ bic and aic for model fitting, and the
 list of precision matrices on the penalized path.
 }
 \description{
-The sparsenetgls() function is a combination of the graph structure
+The sparsenetgls functin is a combination of the graph structure
 learning and generalized least square regression.
 It is designed for multivariate regression uses penalized and/or regularised
 approach to deriving the precision and covariance Matrix of the multivariate
@@ -77,35 +68,26 @@ of the explanatory variables, conditional on the solutions of the precision
 and covariance matrix.
 }
 \examples{
-ndox=5; p=3; n=20
+ndox=5; p=3; n=1000
 VARknown <- rWishart(1, df=4, Sigma=matrix(c(1,0,0,0,1,0,0,0,1),
 nrow=3,ncol=3))
 normc <- mvrnorm(n=n,mu=rep(0,p),Sigma=VARknown[,,1])
 Y0=normc
 ##u-beta
 u <- rep(1,ndox)
-X <- mvrnorm(n=20,mu=rep(0,ndox),Sigma=Diagonal(ndox,rep(1,ndox)))
+X <- mvrnorm(n=n,mu=rep(0,ndox),Sigma=Diagonal(ndox,rep(1,ndox)))
 X00 <- scale(X,center=TRUE,scale=TRUE)
 X0 <- cbind(rep(1,n),X00)
 #Add predictors of simulated CNA
 abundance1 <- scale(Y0,center=TRUE,scale=TRUE)+as.vector(X00\%*\%as.matrix(u))
-Y1 <- scale(abundance1,center=TRUE,scale=TRUE)
-nodes <- c(1:p); units <- c(1:n)
-colnames(Y1)<-nodes
-response <- data.frame(Y1)
-responsedata <- stack(response)
-index <- rep(c(1:p),n)
-responsedata$ind <- sort(index)
-stunits <- rep(units,p)
-stXvar <- apply(X0,2,rep,p)
-colnames(stXvar) <- colnames(X0)
-workdata <- data.frame(units=stunits,nodes=responsedata$ind,
-Y=responsedata$values,stXvar)
-X=stXvar
-Y=workdata$Y
 
 ##sparsenetgls()
 fitgls <- sparsenetgls(responsedata=abundance1,predictdata=X00,
-nlambda=5,ndist=2,method="glasso")
-
+nlambda=5,ndist=2,method='glasso')
+nlambda=5
+##rescale regression coefficients from sparsenetgls
+#betagls <- matrix(nrow=nlambda, ncol=ndox+1)
+#for (i in seq_len(nlambda))   
+#betagls[i,] <- convertbeta(Y=abundance1, X=X00, q=ndox+1,
+#beta0=fitgls$beta[,i])$betaconv
 }

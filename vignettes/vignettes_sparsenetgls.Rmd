@@ -115,8 +115,8 @@ There are two options for the installation:
 
 ## Use bioconductor as installation source
 ```{r installation1,eval=FALSE}
-source("https://bioconductor.org/biocLite.R")
-BiocInstaller::biocLite("sparsenetgls")
+install.packages("BiocManager")
+BiocManaged::install("sparsenetgls")
 library(sparsenetgls)
 ```
 
@@ -152,9 +152,10 @@ In plot_roc , both of the ngroup and group option indicate if the assessed
 results are for a group of GGM or for only one series of GGM. 
 
 ```{r example 1: assess estimated result from a GGM, eval=TRUE}
-library(sparsenetgls)
 library(MASS)
 library(Matrix)
+library(sparsenetgls)
+
 #simulate the dataset
 data(bandprec, package="sparsenetgls")
 varKnown <- solve(as.matrix(bandprec))

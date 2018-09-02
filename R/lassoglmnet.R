@@ -1,5 +1,6 @@
-#'The lassoglmnet() function is designed to learn the graph structure by
-#'using the lasso and elastics net method.
+#'The lassoglmnet() function
+#'@description The lassoglmnet function is designed to learn the graph 
+#'structure by using the lasso and elastics net method.
 #'@import glmnet Matrix MASS
 #'
 #'@param Y0 The data matrix for the GGM model.
@@ -14,8 +15,8 @@
 #'The other values between 0 and 1 will result in a
 #'combination of l1-l2 norm regularization named as elastic net.
 #'
-#'@return Return the regression coefficients of glmnet "coef_glmnet",
-#'residuals from the glmnet "resid_glmnet" and lambda.
+#'@return Return the regression coefficients of glmnet 'coef_glmnet',
+#'residuals from the glmnet 'resid_glmnet' and lambda.
 #'
 #'
 #'@examples
@@ -26,34 +27,51 @@
 #'
 #'@export
 
-
-lassoglmnet <- function(Y0,nlambda=10,alpha)
-{
+lassoglmnet <- function(Y0, nlambda = 10, alpha) {
     p <- dim(Y0)[2]
     n <- dim(Y0)[1]
-    coef_fit_glmnet <- array(rep(0,nlambda*p*p),dim=c(nlambda,p,p));
-    resid_fit_glmnet <- array(dim=c(nlambda,p,n))
+    coef_fit_glmnet <- array(rep(0, nlambda * p * p), 
+        dim = c(p, p, nlambda))
+    resid_fit_glmnet <- array(dim = c(n, p, nlambda))
     
-    for (i in seq_len(p))
-    {
-        Y_X=Y0[,-i];
-        Y=Y0[,i]
-        #glmnet
-        glmnetfit <- glmnet(Y_X,Y,intercept=TRUE,nlambda=5,alpha=alpha)
+    for (i in seq_len(p)) {
+        Y_X = Y0[, -i]
+        Y = Y0[, i]
+        # glmnet
+        glmnetfit <- glmnet(Y_X, Y, intercept = TRUE, 
+            nlambda = 5, alpha = alpha)
         maxlambda <- glmnetfit$lambda[1]
         minlambda <- glmnetfit$lambda[5]
         
-        fit_glmnet <- glmnet(Y_X,Y,intercept=TRUE,
-        lambda=seq(from=0,to=maxlambda,length.out=nlambda),alpha=alpha,
-        lambda.min.ratio=0.1)
+        fit_glmnet <- glmnet(Y_X, Y, intercept = TRUE, 
+            lambda = seq(from = 0, to = maxlambda, 
+                length.out = nlambda), alpha = alpha, 
+            lambda.min.ratio = 0.1)
         B_glmnet <- as.matrix(coef(fit_glmnet))
-        coef_fit_glmnet[,2:p,i] <- t(B_glmnet)[,2:p] #exclude intercept term
-        response <- predict.glmnet(newx=Y_X,fit_glmnet,
-        type="response",exact=TRUE)
-        #row=obs and col=slambda
-        resid_fit_glmnet[,i,] <- t(response-Y);
+        coef_fit_glmnet[2:p, i, ] <- B_glmnet[2:p, 
+            ]  #exclude intercept term
+        response <- predict.glmnet(newx = Y_X, fit_glmnet, 
+            type = "response", exact = TRUE)  #row=obs and col=slambda
+        resid_fit_glmnet[, i, ] <- (response - Y)
         lambda <- fit_glmnet$lambda
     }
-        return(list(coef_glmnet=coef_fit_glmnet,resid_glmnet=resid_fit_glmnet,
-                    lambda=lambda))
+    # set symmetrical index
+    B = apply(coef_fit_glmnet, c(1, 3), t)
+    tf <- function(X) {
+        BL = X[lower.tri(X, diag = TRUE)][-seq_len(dim(B)[1])]
+        B2 = X
+        B2[lower.tri(B2)] = BL
+        diag(B2) = 0
+        return(B2)
+    }
+    
+    for (l in seq_len(nlambda)) coef_fit_glmnet[, , 
+        l] <- tf(B[, , l])
+    
+    return(list(coef_glmnet = coef_fit_glmnet, resid_glmnet = resid_fit_glmnet, 
+        lambda = lambda))
 }
+
+
+
+

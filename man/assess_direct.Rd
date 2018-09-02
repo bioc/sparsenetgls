@@ -2,9 +2,7 @@
 % Please edit documentation in R/assess_direct.R
 \name{assess_direct}
 \alias{assess_direct}
-\title{The assess_direct() function is designed to 
-produce the prediction accuracy of a Gaussian Graphical model(GGM) 
-to the true graph structure with a known precision matrix.}
+\title{The assess_direct() function}
 \usage{
 assess_direct(PREC_for_graph, OMEGA_for_graph, p)
 }
@@ -23,7 +21,7 @@ specificity, NPV(test negative), PPV(test positive), true positive
 and true negative.
 }
 \description{
-The assess_direct() function is designed to 
+The assess_direct function is designed to 
 produce the prediction accuracy of a Gaussian Graphical model(GGM) 
 to the true graph structure with a known precision matrix.
 }

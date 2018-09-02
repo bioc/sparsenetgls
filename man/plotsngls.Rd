@@ -2,10 +2,7 @@
 % Please edit documentation in R/plotsngls.R
 \name{plotsngls}
 \alias{plotsngls}
-\title{The plotsngls() function is designed to provide the line plots
-of penalized parameter lambda and variance of regression coefficients
-in gls regression. It also provides the graph structure of the
-solution to the precision matrix in the penalized path.}
+\title{The plotsngls() function}
 \usage{
 plotsngls(fitgls, lineplot = FALSE, nrow, ncol, structplot = TRUE,
 ith_lambda = 1)
@@ -36,41 +33,28 @@ Return a plot subject for sparsenetgls including the plot of
 variance vs lambda and graph structure of the precision matrix estimates.
 }
 \description{
-The plotsngls() function is designed to provide the line plots
+The plotsngls function is designed to provide the line plots
 of penalized parameter lambda and variance of regression coefficients
 in gls regression. It also provides the graph structure of the
 solution to the precision matrix in the penalized path.
 }
 \examples{
-ndox=5;p=3;n=20
+ndox=5;p=3;n=200
 VARknown <- rWishart(1, df=4, Sigma=matrix(c(1,0,0,0,1,0,0,0,1),
 nrow=3,ncol=3))
 normc <- mvrnorm(n=n,mu=rep(0,p),Sigma=VARknown[,,1])
 Y0=normc
 ##u-beta
 u <- rep(1,ndox)
-X <- mvrnorm(n=20,mu=rep(0,ndox),Sigma=Diagonal(ndox,rep(1,ndox)))        
+X <- mvrnorm(n=n,mu=rep(0,ndox),Sigma=Diagonal(ndox,rep(1,ndox)))        
 X00 <- scale(X,center=TRUE,scale=TRUE)
 X0 <- cbind(rep(1,n),X00)
 #Add predictors of simulated CNA
 abundance1 <- scale(Y0,center=TRUE,scale=TRUE)+as.vector(X00\%*\%as.matrix(u))
-Y1 <- scale(abundance1,center=TRUE,scale=TRUE)
-nodes <- c(1:p); units <- c(1:n)
-colnames(Y1) <- nodes
-response <- data.frame(Y1)
-responsedata <- stack(response)
-index <- rep(c(1:p),n)
-responsedata$ind <- sort(index)
-stunits <- rep(units,p)
-stXvar <- apply(X0,2,rep,p)
-colnames(stXvar) <- colnames(X0)
-workdata <- data.frame(units=stunits,nodes=responsedata$ind,
-Y=responsedata$values,stXvar)
-X=stXvar
-Y=workdata$Y
 
 ##sparsenetgls()
 fitgls <- sparsenetgls(responsedata=abundance1,predictdata=X00,
-nlambda=5,ndist=3,method="glasso")
+nlambda=5,ndist=4,method='glasso')
 plotsngls(fitgls, ith_lambda=5)
+#plotsngls(fitgls,lineplot=TRUE,structplot=FALSE,nrow=2,ncol=3)
 }

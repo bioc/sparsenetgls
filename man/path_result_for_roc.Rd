@@ -2,11 +2,7 @@
 % Please edit documentation in R/path_result_for_roc.R
 \name{path_result_for_roc}
 \alias{path_result_for_roc}
-\title{The path_result_for_roc() function is designed to produce the Reciever
-Operative Characteristics (ROC) Curve for visualizing the prediction
-accuracy of a Gaussian Graphical model (GGM) to the true graph structure.
-The GGM must use a l-p norm regularizations (p=1,2) with the series of
-solutions conditional on the regularization parameter.}
+\title{The path_result_for_roc() function}
 \usage{
 path_result_for_roc(PREC_for_graph, OMEGA_path, pathnumber)
 }
@@ -27,8 +23,8 @@ Return the list of assessment results for a serie of precision
 matrices. The results include sensitiviy/specificity/NPV/PPV
 }
 \description{
-The path_result_for_roc() function is designed to produce the Reciever
-Operative Characteristics (ROC) Curve for visualizing the prediction
+The path_result_for_roc function is designed to produce the 
+Reciever Operative Characteristics (ROC) Curve for visualizing the prediction
 accuracy of a Gaussian Graphical model (GGM) to the true graph structure.
 The GGM must use a l-p norm regularizations (p=1,2) with the series of
 solutions conditional on the regularization parameter.

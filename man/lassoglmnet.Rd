@@ -2,8 +2,7 @@
 % Please edit documentation in R/lassoglmnet.R
 \name{lassoglmnet}
 \alias{lassoglmnet}
-\title{The lassoglmnet() function is designed to learn the graph structure by
-using the lasso and elastics net method.}
+\title{The lassoglmnet() function}
 \usage{
 lassoglmnet(Y0, nlambda = 10, alpha)
 }
@@ -21,12 +20,12 @@ The other values between 0 and 1 will result in a
 combination of l1-l2 norm regularization named as elastic net.}
 }
 \value{
-Return the regression coefficients of glmnet "coef_glmnet",
-residuals from the glmnet "resid_glmnet" and lambda.
+Return the regression coefficients of glmnet 'coef_glmnet',
+residuals from the glmnet 'resid_glmnet' and lambda.
 }
 \description{
-The lassoglmnet() function is designed to learn the graph structure by
-using the lasso and elastics net method.
+The lassoglmnet function is designed to learn the graph 
+structure by using the lasso and elastics net method.
 }
 \examples{
 n=20

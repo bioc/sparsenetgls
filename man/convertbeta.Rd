@@ -2,8 +2,7 @@
 % Please edit documentation in R/convertbeta.R
 \name{convertbeta}
 \alias{convertbeta}
-\title{The convertbeta() function is designed to convert the regression
-coefficients derived from the standardized data}
+\title{The convertbeta() function}
 \usage{
 convertbeta(X, Y, q, beta0)
 }
@@ -19,17 +18,17 @@ sparsenetgls.}
 }
 \value{
 Return the list of converted regression coefficients of the
-explanatory variables "betaconv" and intercept value "betaconv_int".
+explanatory variables 'betaconv' and intercept value 'betaconv_int'.
 }
 \description{
-The convertbeta() function is designed to convert the regression
-coefficients derived from the standardized data
+The covertbeta function is designed to convert the regression
+coefficients derived from the standardized data.
 }
 \examples{
 X <- mvrnorm(n=20,mu=rep(0,5),Sigma=Diagonal(5,rep(1,5)))
 Y <- mvrnorm(n=20,mu=rep(0.5,10),Sigma=Diagonal(10,rep(1,10)))
 fitmodel <-  sparsenetgls(responsedata=Y,predictdata=X,nlambda=5,ndist=2,
-method="elastic")
+method='elastic')
 convertbeta(X=X,Y=Y,q=5+1,beta0=fitmodel$beta[,1])
 
 }

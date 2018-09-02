@@ -2,9 +2,7 @@
 % Please edit documentation in R/glassonet2.R
 \name{glassonet2}
 \alias{glassonet2}
-\title{The glassonet2() function is designed to learn the graph structure
-and the corresponding precision matrix and covariance matrix 
-by using the graph lasso method.}
+\title{The glassonet2() function}
 \usage{
 glassonet2(Y0, nlambda = nlambda, lambda.min.ratio = 0.001, method)
 }
@@ -17,21 +15,21 @@ penalization. The default value is nlambda assigned in the parent function
 sparsenetgls().}
 
 \item{lambda.min.ratio}{It is the default parameter set in function huge()
-in the package "huge". Quoted from huge(), it is the minial value of lambda,
+in the package 'huge'. Quoted from huge(), it is the minial value of lambda,
 being a fraction of the uppperbound (MAX) of the regularization/thresholding
 parameter that makes all the estimates equal to 0.
 The default value is 0.001.}
 
 \item{method}{There are two options for the method parameter which is
-provided in the huge() function. One is "glasso" and the other one is "mb".}
+provided in the huge() function. One is 'glasso' and the other one is 'mb'.}
 }
 \value{
-Return the precision matrix "OMEGAMATRIX", penalized path parameter
-lambda "lambda" and covariance matrix "COVMATRIX".
+Return the precision matrix 'OMEGAMATRIX', penalized path parameter
+lambda 'lambda' and covariance matrix 'COVMATRIX'.
 }
 \description{
-The glassonet2() function is designed to learn the graph structure
-and the corresponding precision matrix and covariance matrix 
+The glassonet2 function is designed to learn the graph 
+structure and the corresponding precision matrix and covariance matrix 
 by using the graph lasso method.
 }
 \examples{
@@ -39,6 +37,6 @@ n=20
 VARknown <- rWishart(1, df=4, Sigma=matrix(c(1,0,0,0,1,0,0,0,1),
 nrow=3,ncol=3))
 Y0 <- mvrnorm(n=n,mu=rep(0.5,3),Sigma=VARknown[,,1])
-fitglasso <- glassonet2(Y0=Y0,nlambda=5,method="glasso")
+fitglasso <- glassonet2(Y0=Y0,nlambda=5,method='glasso')
 
 }

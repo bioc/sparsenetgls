@@ -2,12 +2,7 @@
 % Please edit documentation in R/plot_roc.R
 \name{plot_roc}
 \alias{plot_roc}
-\title{The plot_roc() function is designed to produce the Reciever Operative
-Characteristics (ROC) Curve for visualizing
-the prediction accuracy of a Gaussian Graphical model (GGM) to the true
-graph structure. The GGM must use a l-p
-norm regularizations (p=1,2) with the series of solutions conditional on the
-regularization parameter.}
+\title{The plot_roc() function}
 \usage{
 plot_roc(result_assessment, group = TRUE, ngroup = 0, est_names)
 }
@@ -33,12 +28,11 @@ curve.}
 Return the plot of Receiver Operational Curve
 }
 \description{
-The plot_roc() function is designed to produce the Reciever Operative
-Characteristics (ROC) Curve for visualizing
-the prediction accuracy of a Gaussian Graphical model (GGM) to the true
-graph structure. The GGM must use a l-p
-norm regularizations (p=1,2) with the series of solutions conditional on the
-regularization parameter.
+The plot_roc function is designed to produce the Reciever
+Operative Characteristics (ROC) Curve for visualizing the prediction 
+accuracy of a Gaussian Graphical model (GGM) to the true graph structure. 
+The GGM must use a l-p norm regularizations (p=1,2) with the series of 
+solutions conditional on the regularization parameter.
 }
 \examples{
 prec1 <- matrix(c(0,2,3,1,0,0.5,0,0,0.4),nrow=3,ncol=3)
@@ -49,7 +43,7 @@ Omega_est[,,3] <- matrix(c(0,0,0,0,0,0,0,0,0),nrow=3,ncol=3)
 roc_path_result <- path_result_for_roc(PREC_for_graph=prec1,
 OMEGA_path=Omega_est,pathnumber=3)
 plot_roc(result_assessment=roc_path_result,group=FALSE,ngroup=0,
-est_names="test example")
+est_names='test example')
 
 
 }

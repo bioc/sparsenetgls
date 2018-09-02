@@ -1,7 +1,7 @@
 Package: sparsenetgls
 Type: Package
 Title: Using Gaussian graphical structue learning estimation in generalized least squared regression for multivariate normal regression 
-Version: 0.99.3
+Version: 0.99.4
 Authors@R: c(person("Irene", "Zeng", role = c("aut", "cre"),
             email = "i.zeng@auckland.ac.nz"),
             person("Thomas", "Lumley", role = "ctb", email = "t.lumey@auckland.ac.nz"))
@@ -18,7 +18,7 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Depends: R (>= 3.5.0), Matrix, MASS  
-Imports: methods, glmnet, parcor, huge, grDevices, graphics, stats, utils 
+Imports: methods, glmnet, parcor, huge, stats, graphics, utils 
 Suggests: testthat,
     lme4,
     BiocStyle, 

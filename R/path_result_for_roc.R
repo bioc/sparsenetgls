@@ -1,5 +1,6 @@
-#'The path_result_for_roc() function is designed to produce the Reciever
-#'Operative Characteristics (ROC) Curve for visualizing the prediction
+#'The path_result_for_roc() function
+#'@description The path_result_for_roc function is designed to produce the 
+#'Reciever Operative Characteristics (ROC) Curve for visualizing the prediction
 #'accuracy of a Gaussian Graphical model (GGM) to the true graph structure.
 #'The GGM must use a l-p norm regularizations (p=1,2) with the series of
 #'solutions conditional on the regularization parameter.
@@ -30,20 +31,23 @@
 #'
 #'@export
 
-path_result_for_roc <- function(PREC_for_graph,OMEGA_path,pathnumber)
-{
-    result_assessment_path <- array(dim=c(pathnumber,4))
+path_result_for_roc <- function(PREC_for_graph, OMEGA_path, 
+    pathnumber) {
+    result_assessment_path <- array(dim = c(pathnumber, 
+        4))
     pNO <- dim(OMEGA_path)[1]
     
-    for (k in seq_len(pathnumber)){
-    
-    print(assess_direct(PREC_for_graph,OMEGA_path[,,k],p=pNO)[3:6])
-    result <- assess_direct(PREC_for_graph,OMEGA_path[,,k],p=pNO)
-    
-    result_assessment_path[k,1] <- result$sensitivity
-    result_assessment_path[k,2] <- result$specificity
-    result_assessment_path[k,3] <- result$NPV
-    result_assessment_path[k,4] <- result$PPV
-}
+    for (k in seq_len(pathnumber)) {
+        
+        print(assess_direct(PREC_for_graph, OMEGA_path[, 
+            , k], p = pNO)[3:6])
+        result <- assess_direct(PREC_for_graph, OMEGA_path[, 
+            , k], p = pNO)
+        
+        result_assessment_path[k, 1] <- result$sensitivity
+        result_assessment_path[k, 2] <- result$specificity
+        result_assessment_path[k, 3] <- result$NPV
+        result_assessment_path[k, 4] <- result$PPV
+    }
     return(result_assessment_path)
 }
