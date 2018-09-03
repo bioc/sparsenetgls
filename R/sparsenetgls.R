@@ -78,7 +78,7 @@
 #'
 #'##sparsenetgls()
 #'fitgls <- sparsenetgls(responsedata=abundance1,predictdata=X00,
-#'nlambda=5,ndist=2,method='glasso')
+#'nlambda=5,ndist=2,method='elastic')
 #'nlambda=5
 #'##rescale regression coefficients from sparsenetgls
 #'#betagls <- matrix(nrow=nlambda, ncol=ndox+1)

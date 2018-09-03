@@ -45,7 +45,7 @@
 #'
 #'##sparsenetgls()
 #'fitgls <- sparsenetgls(responsedata=abundance1,predictdata=X00,
-#'nlambda=5,ndist=4,method='glasso')
+#'nlambda=5,ndist=4,method='lasso')
 #'plotsngls(fitgls, ith_lambda=5)
 #'#plotsngls(fitgls,lineplot=TRUE,structplot=FALSE,nrow=2,ncol=3)
 #'@export
