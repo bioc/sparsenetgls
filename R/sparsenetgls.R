@@ -10,7 +10,7 @@
 #'of the explanatory variables, conditional on the solutions of the precision
 #'and covariance matrix.
 #'
-#'@import Matrix MASS huge parcor
+#'@import Matrix MASS huge 
 #'@importFrom methods new
 #'@importFrom stats coef cor cov median sd var
 #'@importFrom utils stack
@@ -89,88 +89,58 @@
 sparsenetgls <- function(responsedata, predictdata, 
     nlambda = 10, ndist = 5, method = c("lasso", "glasso", 
         "elastic", "mb"), lambda.min.ratio = 1e-05) {
-    
-    method <- match.arg(method)
-    colnameprotein <- colnames(responsedata)
+    method <- match.arg(method);    colnameprotein <- colnames(responsedata)
     # Add predictors(subset Y)
-    p <- dim(responsedata)[2]
-    ndox <- dim(predictdata)[2]
-    n <- dim(responsedata)[1]
-    Y1 <- scale(responsedata)
+    p <- dim(responsedata)[2];    ndox <- dim(predictdata)[2]
+    n <- dim(responsedata)[1];    Y1 <- scale(responsedata)
     X0 <- cbind(rep(1, n), scale(predictdata))
-    
     # Stack Y and X
-    nodes <- seq_len(p)
-    units <- seq_len(n)
-    colnames(Y1) <- nodes
-    response <- data.frame(Y1)
-    responsedata <- stack(response)
-    index <- rep(seq_len(p), n)
-    responsedata$ind <- sort(index)
-    stunits <- rep(units, p)
-    X <- apply(X0, 2, rep, p)
-    colnames(X) <- colnames(X0)
+    nodes <- seq_len(p);    units <- seq_len(n)
+    colnames(Y1) <- nodes;    response <- data.frame(Y1)
+    responsedata <- stack(response);    index <- rep(seq_len(p), n)
+    responsedata$ind <- sort(index);    stunits <- rep(units, p)
+    X <- apply(X0, 2, rep, p);    colnames(X) <- colnames(X0)
     Y <- responsedata$values
-    
     beta0 <- solve(t(X) %*% X) %*% crossprod(X, Y)
     covy <- cov(Y1 - as.vector(crossprod(t(X0), beta0)))
-    
     D <- as.matrix(Diagonal(x = diag(covy)))
-    
     beta <- array(dim = c(ndox + 1, nlambda))
-    covBeta <- array(dim = c(ndox + 1, ndox + 1, ndist, 
-        nlambda))
-    
-    # This serie uses the sample data PREC and
-    # COV(Y1-X%*%BETA)
+    covBeta <- array(dim = c(ndox + 1, ndox + 1, ndist, nlambda))
+    # This serie uses the sample data PREC and COV(Y1-X%*%BETA)
     if (method == "glasso") {
         penalized_seq <- huge(covy, lambda.min.ratio = lambda.min.ratio, 
             nlambda = nlambda, scr = FALSE, cov.output = TRUE, 
             method = "glasso")
         PREC_seq = penalized_seq$icov
         lambdav = penalized_seq$lambda
-        
     } else if (method == "mb") {
         penalized_seq <- huge(Y1, lambda.min.ratio = lambda.min.ratio, 
-            nlambda = nlambda, scr = TRUE, sym = "and", 
-            method = "mb")
+            nlambda = nlambda, scr = TRUE, sym = "and", method = "mb")
         PREC_seq <- convert_prec(adjm = penalized_seq$path, 
-            nlambda = nlambda, sample_var = covy, Y = Y1, 
-            p = p)
+            nlambda = nlambda, sample_var = covy, Y = Y1, p = p)
         lambdav = penalized_seq$lambda
-        
     } else if (method == "lasso") {
-        fitlasso <- lassoglmnet(Y1, nlambda = nlambda, 
-            alpha = 1)
+        fitlasso <- lassoglmnet(Y1, nlambda = nlambda, alpha = 1)
         lambdav = fitlasso$lambda
-        
         PREC_ar <- beta_to_omega(Beta = fitlasso$coef_glmnet, 
             resid = fitlasso$resid_glmnet, pathnumber = nlambda)
-        PREC_seq <- lapply(seq(nlambda), function(x) PREC_ar[, 
-            , x])
+        PREC_seq <- lapply(seq(nlambda), function(x) PREC_ar[,,x])
         rm(PREC_ar)
-        
     } else if (method == "elastic") {
-        fitlasso_enet <- lassoglmnet(Y1, nlambda = nlambda, 
-            alpha = 0.5)
+        fitlasso_enet <- lassoglmnet(Y1, nlambda = nlambda, alpha = 0.5)
         lambdav = fitlasso_enet$lambda
         PREC_ar <- beta_to_omega(Beta = fitlasso_enet$coef_glmnet, 
             resid = fitlasso_enet$resid_glmnet, pathnumber = nlambda)
-        PREC_seq <- lapply(seq(nlambda), function(x) PREC_ar[, 
-            , x])
+        PREC_seq <- lapply(seq(nlambda), function(x) PREC_ar[,,x])
         rm(PREC_ar)
     }
-    
     # Derive the path sandwitch parameter and its
-    # variance using the chosen cov of tuning parameter
-    # d
+    # variance using the chosen cov of tuning parameter d
     dist_adj <- dist_tune(covy = covy, covstart = PREC_seq[[round(nlambda/2, 
-        0)]], ndist = ndist, p = p)
+    0)]], ndist = ndist, p = p)
     cov_adj <- dist_adj$cov_adj
-    
     B = array(dim = c(ndox + 1, ndox + 1, ndist, nlambda))
     aic = bic = array(dim = c(dist_adj$power, nlambda))
-    
     for (lambda in seq_len(nlambda)) {
         power = 1
         while (power <= dist_adj$power) {
@@ -182,7 +152,6 @@ sparsenetgls <- function(responsedata, predictdata,
         power = power + 1
         }
     }
-    
     for (lambda in seq_len(nlambda)) {
         for (s in seq_len(dist_adj$power)) {
         V_1_kron <- as.matrix(bdiag(rep(list(as.matrix(PREC_seq[[lambda]])),n)))

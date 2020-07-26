@@ -4,7 +4,7 @@
 #'in gls regression. It also provides the graph structure of the
 #'solution to the precision matrix in the penalized path.
 #'
-#'@import huge parcor 
+#'@import huge 
 #'
 #'@param fitgls It is a returning object of the sparsnetgls() multivariate
 #'generalized least squared regression function.
@@ -50,48 +50,63 @@
 #'#plotsngls(fitgls,lineplot=TRUE,structplot=FALSE,nrow=2,ncol=3)
 #'@export
 
-plotsngls <- function(fitgls, lineplot = FALSE, nrow, 
-    ncol, structplot = TRUE, ith_lambda = 1) {
-    lambda <- fitgls$lambda
-    nlambda <- length(lambda)
-    covBeta <- fitgls$covBeta
-    beta <- fitgls$beta
-    ndox <- length(beta[, 1])
-    ndist <- fitgls$power - 1
+plotsngls<- function(fitgls, lineplot = FALSE, nrow, 
+                      ncol, structplot = TRUE, ith_lambda = 1) {
+lambda <- fitgls$lambda
+nlambda <- length(lambda)
+covBeta <- fitgls$covBet
+ndist <- fitgls$power-1
+  
+  # line-plot
+if (lineplot == TRUE) {
+      par(mfrow = c(nrow, ncol))
+beta <- fitgls$beta
+ndox <- length(beta[, 1])
+      nq = nrow * ncol
     
-    # line-plot
-    if (lineplot == TRUE) {
-        par(mfrow = c(nrow, ncol))
-        nq = nrow * ncol
+      if (ndist>1)
+      {
+      for (i in seq_len(nq)) {
+        maxcov <- max(covBeta[i, i, ndist, ], na.rm = TRUE)
+        mincov <- min(covBeta[i, i, ndist, ], na.rm = TRUE)
+        grid = (maxcov - mincov)/10
         
-        for (i in seq_len(nq)) {
-            maxcov <- max(covBeta[i, i, , ], na.rm = TRUE)
-            mincov <- min(covBeta[i, i, , ], na.rm = TRUE)
-            grid = (maxcov - mincov)/10
-            
-            plot(lambda, covBeta[i, i, ndist, ], main = paste("beta", 
-                i - 1, sep = ""), xlab = "lambda", 
-                ylab = "Estimated variance of beta", 
-                type = "p", pch = 19, ylim = c(mincov - 
-                mincov/100, maxcov + maxcov/100))
-            lines(lambda, covBeta[i, i, ndist, ])
-            if (i == nq) 
-                legend(lambda[nlambda - 1], round(maxcov, 
-                4) - grid, bty = "n", lty = 1, paste("d=", 
-                ndist))
-        }
-    }
-    # graph-structure
-    if (structplot == TRUE) {
-        PREC_seq <- fitgls$PREC_seq
-        precdim = dim(fitgls$PREC_seq[[1]])[1]
-        adj <- convert_to_adj(fitgls$PREC_seq[[ith_lambda]], 
-            p = precdim)
-        huge.plot(adj, graph.name = "precision matrix")
-    }
+        plot(lambda, covBeta[i, i, ndist, ], main = paste("beta", 
+                                                          i - 1, sep = ""), xlab = "lambda", 
+             ylab = "Estimated variance of beta", 
+             type = "p", pch = 19, ylim = c(mincov - 
+                                              mincov/10, maxcov + maxcov/10))
+        lines(lambda, covBeta[i, i, ndist, ])
+        if (i == nq) 
+          legend(lambda[nlambda], round(maxcov, 4) - grid, bty = "n",
+               lty = 1, paste("max tuning d=", ndist))}
+      }  
+      else if (ndist==1)
+       {
+       for (i in seq_len(nq)) {
+       maxcov <- max(covBeta[i, i, ], na.rm = TRUE)
+       mincov <- min(covBeta[i, i, ], na.rm = TRUE)
+       grid = (maxcov - mincov)/10
+        
+        plot(lambda, covBeta[i, i, ], main = paste("beta", i - 1, sep = ""), 
+              xlab = "lambda", 
+              ylab = "Estimated variance of beta", 
+              type = "p", pch = 19, ylim = c(mincov, maxcov))
+        lines(lambda, covBeta[i, i, ])
+        if (i == nq) 
+        legend(lambda[nlambda], round(maxcov, 4) - grid, bty = "n",
+                lty = 1, paste("max tuning d=", ndist))}
+       }    
+      
+                        }
+  # graph-structure
+  if (structplot == TRUE) {
+    PREC_seq <- fitgls$PREC_seq
+    precdim = dim(fitgls$PREC_seq[[1]])[1]
+    adj <- convert_to_adj(fitgls$PREC_seq[[ith_lambda]], 
+                          p = precdim)
+    huge.plot(adj, graph.name = "precision matrix")
+  }
 }
-
-
-
 
 

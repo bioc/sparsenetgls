@@ -21,18 +21,19 @@ knitr::opts_chunk$set(echo = TRUE)
 # Introduction
 
 ## Summary  
-In regression models for Gaussian multivariate data from high-throughput assays
-("omic" data), the response variables normally have their latent structure in 
-the variance-covariance matrix and its inverse. The conventional approach gives
-assumptions of these structures in regression. For example, in repeated measure
-analysis of variance, the covariance matrix is given a fixed form of the 
-structure. However, these assumptions are not known to be true unless there are
-prior information available. Accurate information of the variance covariance 
-matrix and the precision matrix will achieve better estimation in the regression
-coefficients. In cases of response variables with only a small numbers of 
-non-zero covariance terms in the variance-covariance matrix, they are equivalent
-to a sparse undirected network graph of which nodes represent variables and 
-edges represent non-zero links between these variables.
+When we use regression models for Gaussian multivariate data curated from 
+high-throughput assays("omic" data), the response variables normally have 
+their latent structure in the variance-covariance matrix and its inverse. 
+The conventional approach gives assumptions of these structures in regression.
+For example, in repeated measure analysis of variance, the covariance matrix 
+is given a fixed form of the structure.  However, these assumptions are not 
+known to be true unless there are prior information available. 
+Accurate information of the variance covariance matrix and the precision matrix
+will achieve better estimation in the regression coefficients.  In cases of 
+response variables with only a small numbers of non-zero covariance
+terms in the variance-covariance matrix, they are equivalent to a sparse 
+undirected network graph of which nodes represent variables and edges represent
+non-zero links between these variables.
 
 Our method is to utilize the Gaussian Graphical Model (GGM) in estimating the 
 structure of a sparse variance-covariance matrix and its inverse (precision 
@@ -61,9 +62,9 @@ and Tibshirani (2007).
 "lasso" and "mb" use the linear regression with lasso penalization to provide 
 an asymmetric approximation which is proposed by  Meinshausen and 
 Buhlmann (2006). 
-"enet" is also an asymmetric approximation by linear regressions but using the 
-combination of lasso penalization (l1) and ridge regularization(l2).   
-In the generalized least square regression, regression coefficients were 
+"enet" is also an asymmetric approximation using linear regressions but using 
+the combination of lasso penalization (l1) and ridge regularization(l2).   
+In the generalized least square regression, regression coefficients are 
 estimated from the multilevel formatted multivariate model. Response variables 
 are stacked into one univariate regression variable with an indicator to 
 identify their sampling units. The sandwich estimator of the variance is 
@@ -187,7 +188,7 @@ sparsenetgls using "glasso" method to estimate the precision matrix of GGM.
 The function convertbeta() is to convert the regression coefficients from the 
 standardized scale to the original scale. 
 The following codes after the convertion is to select betas with the minimal 
-variance, aic and bic. 
+variance, aic or bic. 
 
 ```{r example 2: Use the sparsenetgls and convertbeta function,eval=TRUE}
 
