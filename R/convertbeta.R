@@ -6,9 +6,10 @@
 #'
 #'@param Y It is the multivariate response variables. 
 #'
-#'@param q It is an integer representing the number of explanatory variables.
+#'@param q It is an integer representing the number of explanatory variables 
+#'and intercept.
 #'
-#'@param beta0 The vector contains the regression coefficients from
+#'@param beta0 The vector contains the regression coefficients result from
 #'sparsenetgls. 
 #'
 #'@return Return the list of converted regression coefficients of the
@@ -20,6 +21,7 @@
 #'Y <- mvrnorm(n=20,mu=rep(0.5,10),Sigma=Diagonal(10,rep(1,10)))
 #'fitmodel <-  sparsenetgls(responsedata=Y,predictdata=X,nlambda=5,ndist=2,
 #'method='elastic')
+#'#Example of converting the regression coef of the first lamda
 #'convertbeta(X=X,Y=Y,q=5+1,beta0=fitmodel$beta[,1])
 #'
 #'@export

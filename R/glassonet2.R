@@ -1,6 +1,6 @@
 #'The glassonet2() function
 #'@description The glassonet2 function is designed to learn the graph 
-#'structure and the corresponding precision matrix and covariance matrix 
+#'structure, the corresponding precision matrix and covariance matrix 
 #'by using the graph lasso method.
 #'
 #'@import huge Matrix MASS
@@ -13,8 +13,8 @@
 #'sparsenetgls().
 #'
 #'@param lambda.min.ratio It is the default parameter set in function huge()
-#'in the package 'huge'. Quoted from huge(), it is the minial value of lambda,
-#'being a fraction of the uppperbound (MAX) of the regularization/thresholding
+#'in the package 'huge'. Quoted from huge(), it is the minimal value of lambda,
+#'being a fraction of the upper bound (MAX) of the regularization/ thresholding
 #'parameter that makes all the estimates equal to 0.
 #'The default value is 0.001.
 #'

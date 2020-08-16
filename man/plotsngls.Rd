@@ -40,9 +40,10 @@ variance vs lambda and graph structure of the precision matrix estimates.
 }
 \description{
 The plotsngls function is designed to provide the line plots
-of penalized parameter lambda and variance of regression coefficients
-in gls regression. It also provides the graph structure of the
-solution to the precision matrix in the penalized path.
+of variance of regression coefficients vs. values of penalized parameter 
+lambda in gls regression, when the tuning parameter d is the maximal value. It
+also provides the graph structure of the estimated precision matrix in the 
+penalized path.
 }
 \examples{
 ndox=5;p=3;n=200

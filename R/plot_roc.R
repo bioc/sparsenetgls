@@ -1,5 +1,5 @@
 #'The plot_roc() function
-#'@description The plot_roc function is designed to produce the Reciever
+#'@description The plot_roc function is designed to produce the Receiver
 #'Operative Characteristics (ROC) Curve for visualizing the prediction 
 #'accuracy of a Gaussian Graphical model (GGM) to the true graph structure. 
 #'The GGM must use a l-p norm regularizations (p=1,2) with the series of 
@@ -10,14 +10,14 @@
 #'path_result_for_roc() which has five-dimensions recording
 #'the path number (i.e. the order of \eqn{\lambda} ), the sensitivity,
 #'the specificity, the Negative predicted value (NPV) and
-#'the Postive predicted value (PPV) respectively.
+#'the Positive predicted value (PPV) respectively.
 #'
 #'@param group It is a logical parameter indicating if the result_assessment
 #'is for several GGM models. When it is TRUE,
 #'it produceS the ROC from several GGM models. when it is FALSE, it only
 #'produces a ROC for one model.
 #'
-#'@param ngroup It is an interger recording the number of models when group
+#'@param ngroup It is an  integer recording the number of models when group
 #'is TRUE.
 #'
 #'@param est_names it is used for labeling the GGM model in legend of ROC

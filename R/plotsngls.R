@@ -1,8 +1,9 @@
 #'The plotsngls() function
 #'@description The plotsngls function is designed to provide the line plots
-#'of penalized parameter lambda and variance of regression coefficients
-#'in gls regression. It also provides the graph structure of the
-#'solution to the precision matrix in the penalized path.
+#'of variance of regression coefficients vs. values of penalized parameter 
+#'lambda in gls regression, when the tuning parameter d is the maximal value. It
+#'also provides the graph structure of the estimated precision matrix in the 
+#'penalized path.
 #'
 #'@import huge 
 #'
@@ -72,7 +73,8 @@ ndox <- length(beta[, 1])
         grid = (maxcov - mincov)/10
         
         plot(lambda, covBeta[i, i, ndist, ], main = paste("beta", 
-                                                          i - 1, sep = ""), xlab = "lambda", 
+                                                          i - 1, sep = ""), 
+             xlab = "lambda", 
              ylab = "Estimated variance of beta", 
              type = "p", pch = 19, ylim = c(mincov - 
                                               mincov/10, maxcov + maxcov/10))

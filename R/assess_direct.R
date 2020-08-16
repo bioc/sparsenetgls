@@ -1,7 +1,7 @@
 #'The assess_direct() function
 #'@description  The assess_direct function is designed to 
-#'produce the prediction accuracy of a Gaussian Graphical model(GGM) 
-#'to the true graph structure with a known precision matrix.
+#'evaluate the prediction accuracy of a Gaussian Graphical model(GGM) 
+#'comparing with the true graph structure with a known precision matrix.
 #'
 #'@param PREC_for_graph It is the known precision matrix which is used to
 #'assess the estimated precision matrix from GGM.
