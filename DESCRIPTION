@@ -3,7 +3,7 @@ Type: Package
 Title: Using Gaussian graphical structue learning estimation in generalized least squared regression for multivariate normal regression 
 Version: 1.98.0
 Authors@R: c(person("Irene", "Zeng", role = c("aut", "cre"),
-            email = "i.zeng@auckland.ac.nz"),
+            email = "szen003@aucklanduni.ac.nz"),
             person("Thomas", "Lumley", role = "ctb", email = "t.lumey@auckland.ac.nz"))
 Description: The package provides methods of combining the graph structure learning and generalized 
     least squares regression to improve the regression estimation. The main function sparsenetgls() provides
