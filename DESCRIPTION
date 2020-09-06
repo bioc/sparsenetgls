@@ -1,7 +1,7 @@
 Package: sparsenetgls
 Type: Package
 Title: Using Gaussian graphical structue learning estimation in generalized least squared regression for multivariate normal regression 
-Version: 1.98.0
+Version: 1.7.1
 Authors@R: c(person("Irene", "Zeng", role = c("aut", "cre"),
             email = "szen003@aucklanduni.ac.nz"),
             person("Thomas", "Lumley", role = "ctb", email = "t.lumey@auckland.ac.nz"))
@@ -26,8 +26,8 @@ Suggests: testthat,
     roxygen2  (>= 5.0.0)
 NeedsCompilation: no
 URL: 
-RoxygenNote: 7.1.1
-biocViews: GraphAndNetwork,Regression,Metabolomics,CopyNumberVariation,MassSpectrometry,Proteomics,Software,Visualization
+RoxygenNote: 6.0.1
+biocViews: ImmunoOncology, GraphAndNetwork,Regression,Metabolomics,CopyNumberVariation,MassSpectrometry,Proteomics,Software,Visualization
 bugReport: https://github.com/superOmics/sparsenetgls/issues
 VignetteBuilder: knitr
 SystemRequirements: GNU make
