@@ -22,8 +22,8 @@ and true negative.
 }
 \description{
 The assess_direct function is designed to 
-produce the prediction accuracy of a Gaussian Graphical model(GGM) 
-to the true graph structure with a known precision matrix.
+evaluate the prediction accuracy of a Gaussian Graphical model(GGM) 
+comparing with the true graph structure with a known precision matrix.
 }
 \examples{
 prec1 <- matrix(c(0,2,3,1,0,0.5,0,0,0.4),nrow=3,ncol=3)

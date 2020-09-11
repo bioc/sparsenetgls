@@ -4,8 +4,14 @@
 \alias{plotsngls}
 \title{The plotsngls() function}
 \usage{
-plotsngls(fitgls, lineplot = FALSE, nrow, ncol, structplot = TRUE,
-ith_lambda = 1)
+plotsngls(
+  fitgls,
+  lineplot = FALSE,
+  nrow,
+  ncol,
+  structplot = TRUE,
+  ith_lambda = 1
+)
 }
 \arguments{
 \item{fitgls}{It is a returning object of the sparsnetgls() multivariate
@@ -34,9 +40,10 @@ variance vs lambda and graph structure of the precision matrix estimates.
 }
 \description{
 The plotsngls function is designed to provide the line plots
-of penalized parameter lambda and variance of regression coefficients
-in gls regression. It also provides the graph structure of the
-solution to the precision matrix in the penalized path.
+of variance of regression coefficients vs. values of penalized parameter 
+lambda in gls regression, when the tuning parameter d is the maximal value. It
+also provides the graph structure of the estimated precision matrix in the 
+penalized path.
 }
 \examples{
 ndox=5;p=3;n=200
@@ -54,7 +61,7 @@ abundance1 <- scale(Y0,center=TRUE,scale=TRUE)+as.vector(X00\%*\%as.matrix(u))
 
 ##sparsenetgls()
 fitgls <- sparsenetgls(responsedata=abundance1,predictdata=X00,
-nlambda=5,ndist=4,method='glasso')
+nlambda=5,ndist=4,method='lasso')
 plotsngls(fitgls, ith_lambda=5)
 #plotsngls(fitgls,lineplot=TRUE,structplot=FALSE,nrow=2,ncol=3)
 }
