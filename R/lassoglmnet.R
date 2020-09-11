@@ -1,6 +1,6 @@
 #'The lassoglmnet() function
 #'@description The lassoglmnet function is designed to learn the graph 
-#'structure by using the lasso and elastics net method.
+#'structure by using the lasso and elastics net methods.
 #'@import glmnet Matrix MASS
 #'
 #'@param Y0 The data matrix for the GGM model.
@@ -9,7 +9,7 @@
 #'and elastics. It results in the number of lambda values to be used in the
 #'penalization. The default value is 10.
 #'
-#'@param alpha The vaule to be used in enet, it has values betwee 0 and 1.
+#'@param alpha The value to be used in enet, it has values between 0 and 1.
 #'The value of 0 is corresponding to l-1 penalization,
 #'and 1 is corresponding to the l-2 regularization (Ridge regression).
 #'The other values between 0 and 1 will result in a

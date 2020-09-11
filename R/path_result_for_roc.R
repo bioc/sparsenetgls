@@ -1,23 +1,23 @@
 #'The path_result_for_roc() function
-#'@description The path_result_for_roc function is designed to produce the 
-#'Reciever Operative Characteristics (ROC) Curve for visualizing the prediction
-#'accuracy of a Gaussian Graphical model (GGM) to the true graph structure.
+#'@description The path_result_for_roc function is designed to evaluate the 
+#'the prediction accuracy of a series Gaussian Graphical models (GGM) comparing 
+#'to the true graph structure.
 #'The GGM must use a l-p norm regularizations (p=1,2) with the series of
 #'solutions conditional on the regularization parameter.
 #'
 #'@param PREC_for_graph It is the known precision matrix which is used to
 #'assess the estimated precision matrix from GGM.
 #'
-#'@param OMEGA_path It is an estimated precision matrix from a GGM model
-#'using the penalized path with a range of values
-#'(i.e. \eqn{\lambda,\in [0,1]}).
+#'@param OMEGA_path It is a matrix comprising of a series estimated precision 
+#'matrices from a GGM model using a penalized path based on a range of structure
+#'parameters (i.e. \eqn{\lambda,\in [0,1]}).
 #'
-#'@param pathnumber It represents the number of values (i.e. \eqn{\lambda})
-#'used in the penalized GGM. This will result in the number of co-ordinates
-#'used to form the ROC curve.
+#'@param pathnumber It represents the number of graph models 
+#'(i.e. \eqn{\lambda}) for the evaluation.The value of pathnumber can be the 
+#'same number used in a penalized path.  
 #'
-#'@return Return the list of assessment results for a serie of precision
-#'matrices. The results include sensitiviy/specificity/NPV/PPV
+#'@return Return the list of assessment results for a series of precision
+#'matrices. The results include sensitivity/specificity/NPV/PPV
 #'
 #'
 #'@examples
