@@ -5,6 +5,7 @@ Version: 1.6.1
 Authors@R: c(person("Irene", "Zeng", role = c("aut", "cre"),
             email = "szen003@aucklanduni.ac.nz"),
             person("Thomas", "Lumley", role = "ctb", email = "t.lumey@auckland.ac.nz"))
+Maintainer: Irene SL Zeng <szen003@aucklanduni.ac.nz>			
 Description: The package provides methods of combining the graph structure learning and generalized 
     least squares regression to improve the regression estimation. The main function sparsenetgls() provides
 	solutions for multivariate regression with Gaussian distributed dependant variables and explanatory variables
